@@ -19,7 +19,7 @@ public class Configuration {
     public Configuration(Properties properties) {
         queueuName = properties.getProperty("queue.name", DEFAULT_QUEUE_NAME);
         queueHost = properties.getProperty("queue.host", DEFAULT_QUEUE_HOST);
-        messageProcessorType = properties.getProperty("processory.type", DEFAULT_MESSAGE_PROCESSOR_TYPE);
+        messageProcessorType = properties.getProperty("processor.type", DEFAULT_MESSAGE_PROCESSOR_TYPE);
     }
 
     public String getQueueuName() {
