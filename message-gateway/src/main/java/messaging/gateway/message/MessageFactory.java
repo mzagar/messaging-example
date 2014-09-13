@@ -53,7 +53,7 @@ public class MessageFactory {
                 return context.deserialize(jsonObject.get("payload"), MessageData.class);
             }
 
-            throw new IllegalArgumentException("unsupported protocolVersion: " + protocolVersion);
+            throw new IllegalArgumentException("unsupported protocolVersion: " + protocolVersion + ", supported versions: " + Versions.getSupportedVersions());
         }
     }
 }
