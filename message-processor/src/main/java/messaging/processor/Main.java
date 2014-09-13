@@ -9,8 +9,7 @@ import messaging.processor.queue.MessageQueueConsumerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.util.Properties;
+import java.io.File;
 
 /**
  * Message processor main entry point.<p>
@@ -39,7 +38,7 @@ public class Main {
             throw new IllegalArgumentException("Expecting only one (optional) argument: configuration file");
         }
 
-        final Configuration configuration = args.length == 0 ? Configuration.createDefault() : Configuration.createfromFile(new File(args[1]));
+        final Configuration configuration = args.length == 0 ? Configuration.createDefault() : Configuration.createfromFile(new File(args[0]));
 
         logger.info("Using configuration: {}", configuration);
 
