@@ -8,7 +8,7 @@ RabbitMQ installed and message broker running on localhost, default port.
 
 Messaging example project consisting of 3 separate parts:
 
-1. _message-gateway_: webapp receiving messages in json format POSTed to http://<base_url>/message and publishing them to 'messageGatewayQueue'
+1. _message-gateway_: webapp receiving messages in json format POSTed to http://localhost:8080/message and publishing them to 'messageGatewayQueue'
 
 2. _message-queue_: rabbitmq message queue broker running on localhost (default port)
 
