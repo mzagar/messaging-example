@@ -1,6 +1,8 @@
 package messaging.gateway.message;
 
 /**
+ * Message payload.
+ *
  * Created by mzagar on 11.9.2014.
  */
 public class MessageData {

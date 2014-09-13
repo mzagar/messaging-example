@@ -13,6 +13,8 @@ import messaging.processor.queue.MessageQueueConsumerException;
 import java.io.IOException;
 
 /**
+ * RabbitMQ message consumer implementation.
+ *
  * Created by mzagar on 11.9.2014.
  */
 public class RabbitMQMessageQueueConsumer extends AbstractMessageConsumer {

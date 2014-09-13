@@ -2,10 +2,10 @@ package messaging.gateway.servlet;
 
 import messaging.gateway.message.Message;
 import messaging.gateway.message.MessageFactory;
-import messaging.gateway.queue.MessageQueuePublisherFactory;
-import messaging.gateway.queue.MessageQueuePublisher;
 import messaging.gateway.message.MessageValidationException;
 import messaging.gateway.message.MessageValidator;
+import messaging.gateway.queue.MessageQueuePublisher;
+import messaging.gateway.queue.MessageQueuePublisherFactory;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +19,18 @@ import java.io.InputStream;
 import java.io.StringWriter;
 
 /**
+ * Message gateway servlet - receives and publishes to message queue messages received in json format according
+ * to specification in body of http POST request.<p>
+ *
+ * Parameters 'queueName' and 'queueHost' are mandatory and must be specified as init-params.<p>
+ *
  * Created by mzagar on 10.9.2014.
  */
 public class MessageGatewayServlet extends HttpServlet {
     private Logger logger = LoggerFactory.getLogger(MessageGatewayServlet.class);
+
+    private static final String PARAM_QUEUE_NAME = "queueName";
+    private static final String PARAM_QUEUE_HOST = "queueHost";
 
     private MessageFactory messageFactory;
     private MessageValidator messageValidator;
@@ -30,14 +38,14 @@ public class MessageGatewayServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        String queueHost = getInitParameter("queueHost");
+        String queueHost = getInitParameter(PARAM_QUEUE_HOST);
         if (queueHost == null || queueHost.isEmpty()) {
-            throw new ServletException("init parameter 'queueHost' is mandatory");
+            throw new ServletException("init parameter '" + PARAM_QUEUE_HOST + "' is mandatory");
         }
 
-        String queueName = getInitParameter("queueName");
+        String queueName = getInitParameter(PARAM_QUEUE_NAME);
         if (queueName == null || queueName.isEmpty()) {
-            throw new ServletException("init parameter 'queueName' is mandatory");
+            throw new ServletException("init parameter '" + PARAM_QUEUE_NAME + "' is mandatory");
         }
 
         messageFactory = new MessageFactory();

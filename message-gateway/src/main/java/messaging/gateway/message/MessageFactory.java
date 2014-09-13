@@ -5,7 +5,7 @@ import com.google.gson.*;
 import java.lang.reflect.Type;
 
 /**
- * Creates Message instance from specified json String.
+ * Implements logic to create {@link messaging.gateway.message.Message} instance from specified json string.
  *
  * Parses json string protocolVersion to properly deserialize different versions of Message object.
  *
@@ -45,11 +45,11 @@ public class MessageFactory {
                 throw new IllegalArgumentException("protocolVersion expected but is null");
             }
 
-            if ("1.0.0".equals(protocolVersion) || "1.0.1".equals(protocolVersion)) {
+            if (Versions.V1_0_0.equals(protocolVersion) || Versions.V1_0_1.equals(protocolVersion)) {
                 return context.deserialize(jsonObject.get("messageData"), MessageData.class);
             }
 
-            if ("2.0.0".equals(protocolVersion)) {
+            if (Versions.V2_0_0.equals(protocolVersion)) {
                 return context.deserialize(jsonObject.get("payload"), MessageData.class);
             }
 

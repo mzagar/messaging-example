@@ -1,17 +1,19 @@
 package messaging.gateway.queue.rabbitmq;
 
-import messaging.gateway.message.Message;
-import messaging.gateway.queue.MessageQueuePublisher;
-import messaging.gateway.queue.MessageQueuePublisherException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import messaging.gateway.message.Message;
+import messaging.gateway.queue.MessageQueuePublisher;
+import messaging.gateway.queue.MessageQueuePublisherException;
 
 import java.io.IOException;
 
 /**
+ * RabbitMQ message queue publisher implementation.
+ *
  * Created by mzagar on 11.9.2014.
  */
 public class RabbitMQMessageQueuePublisher implements MessageQueuePublisher {

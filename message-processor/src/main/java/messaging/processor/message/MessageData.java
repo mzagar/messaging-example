@@ -8,10 +8,13 @@ import com.google.gson.annotations.SerializedName;
 public class MessageData {
     @SerializedName("mMX")
     private final int mMX;
+
     @SerializedName("mPermGen")
     private final int mPermGen;
+
     @SerializedName("mOldGen")
     private final Integer mOldGen;
+
     @SerializedName("mYoungGen")
     private final Integer mYoungGen;
 

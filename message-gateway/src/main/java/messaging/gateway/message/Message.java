@@ -3,6 +3,8 @@ package messaging.gateway.message;
 import com.google.gson.annotations.SerializedName;
 
 /**
+ * Message model.
+ *
  * Created by mzagar on 11.9.2014.
  */
 public class Message {
