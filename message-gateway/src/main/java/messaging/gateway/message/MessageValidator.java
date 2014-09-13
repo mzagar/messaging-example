@@ -1,6 +1,4 @@
-package messaging.gateway.validator;
-
-import messaging.gateway.message.Message;
+package messaging.gateway.message;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package messaging.gateway.validator;
+package messaging.gateway.message;
 
 /**
  * Created by mzagar on 11.9.2014.

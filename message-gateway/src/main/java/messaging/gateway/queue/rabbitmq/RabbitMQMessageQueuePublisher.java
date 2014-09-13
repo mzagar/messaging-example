@@ -52,7 +52,7 @@ public class RabbitMQMessageQueuePublisher implements MessageQueuePublisher {
         try {
             channel.basicPublish("", queueName, null, serializer.toJson(message).getBytes());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new MessageQueuePublisherException(e.getMessage(), e);
         }
     }
 }

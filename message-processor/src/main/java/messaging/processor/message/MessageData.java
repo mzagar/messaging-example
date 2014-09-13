@@ -1,12 +1,18 @@
 package messaging.processor.message;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by mzagar on 11.9.2014.
  */
 public class MessageData {
+    @SerializedName("mMX")
     private final int mMX;
+    @SerializedName("mPermGen")
     private final int mPermGen;
+    @SerializedName("mOldGen")
     private final Integer mOldGen;
+    @SerializedName("mYoungGen")
     private final Integer mYoungGen;
 
     public MessageData(int mMX, int mPermGen) {
@@ -24,19 +30,19 @@ public class MessageData {
         this.mYoungGen = mYoungGen;
     }
 
-    public int getmMX() {
+    public int getMX() {
         return mMX;
     }
 
-    public int getmPermGen() {
+    public int getPermGen() {
         return mPermGen;
     }
 
-    public Integer getmOldGen() {
+    public Integer getOldGen() {
         return mOldGen;
     }
 
-    public Integer getmYoungGen() {
+    public Integer getYoungGen() {
         return mYoungGen;
     }
 

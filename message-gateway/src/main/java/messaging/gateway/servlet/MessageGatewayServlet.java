@@ -4,8 +4,8 @@ import messaging.gateway.message.Message;
 import messaging.gateway.message.MessageFactory;
 import messaging.gateway.queue.MessageQueuePublisherFactory;
 import messaging.gateway.queue.MessageQueuePublisher;
-import messaging.gateway.validator.MessageValidationException;
-import messaging.gateway.validator.MessageValidator;
+import messaging.gateway.message.MessageValidationException;
+import messaging.gateway.message.MessageValidator;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,18 +54,16 @@ public class MessageGatewayServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String json = inputStreamToString(req.getInputStream());
+        logger.debug("Start HTTP request, src={}:{}", req.getRemoteAddr(), req.getRemotePort());
 
-        if (json == null || json.isEmpty()) {
-            logger.debug("empty json body");
-            response(resp, "expecting message json body, but body is empty", HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
+        String json = inputStreamToString(req.getInputStream());
+        logger.debug("json: {}", json);
 
         Message message;
 
         try {
             message = messageFactory.createFromJson(json);
+            logger.debug("message: {}", message);
         } catch(Exception e) {
             logger.error(e.getMessage(), e);
             response(resp, e.getMessage(), HttpServletResponse.SC_BAD_REQUEST);
@@ -83,12 +81,14 @@ public class MessageGatewayServlet extends HttpServlet {
         try {
             messagePublisher.publish(message);
         } catch (Exception e) {
-            logger.error("message publish failed: " + e.getMessage(), e);
+            logger.error("Message publish failed: " + e.getMessage(), e);
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         }
 
-        resp.setStatus(HttpServletResponse.SC_OK);
+        response(resp, "OK", HttpServletResponse.SC_OK);
+
+        logger.debug("End HTTP request, src={}:{}", req.getRemoteAddr(), req.getRemotePort());
     }
 
     private void response(HttpServletResponse resp, String message, int statusCode) throws IOException {

@@ -24,28 +24,36 @@ public class MessageFactory {
         public Message deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             JsonObject jsonObject = json.getAsJsonObject();
 
-            int messageId = jsonObject.get("messageId").getAsInt();
-            int timestamp = jsonObject.get("timestamp").getAsInt();
-            String protocolVersion = jsonObject.get("protocolVersion").getAsString();
+            int messageId = validJsonElementOrThrow(jsonObject, "messageId").getAsInt();
+            int timestamp = validJsonElementOrThrow(jsonObject, "timestamp").getAsInt();
+            String protocolVersion = validJsonElementOrThrow(jsonObject, "protocolVersion").getAsString();
             MessageData messageData = createMessageData(protocolVersion, jsonObject, context);
 
             return new Message(messageId, timestamp, protocolVersion, messageData);
         }
 
+        private JsonElement validJsonElementOrThrow(JsonObject jsonObject, String name) {
+            JsonElement jsonElement = jsonObject.get(name);
+            if (jsonElement == null) {
+                throw new IllegalArgumentException(name + " expected but is missing");
+            }
+            return jsonElement;
+        }
+
         private MessageData createMessageData(String protocolVersion, JsonObject jsonObject, JsonDeserializationContext context) {
             if (protocolVersion == null) {
-                return null;
+                throw new IllegalArgumentException("protocolVersion expected but is null");
             }
 
-            if (protocolVersion.startsWith("1.0")) {
+            if ("1.0.0".equals(protocolVersion) || "1.0.1".equals(protocolVersion)) {
                 return context.deserialize(jsonObject.get("messageData"), MessageData.class);
             }
 
-            if (protocolVersion.startsWith("2.0")) {
+            if ("2.0.0".equals(protocolVersion)) {
                 return context.deserialize(jsonObject.get("payload"), MessageData.class);
             }
 
-            return null;
+            throw new IllegalArgumentException("unsupported protocolVersion: " + protocolVersion);
         }
     }
 }

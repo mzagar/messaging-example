@@ -7,8 +7,7 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.QueueingConsumer;
 import messaging.processor.message.Message;
-import messaging.processor.processor.MessageProcessor;
-import messaging.processor.queue.MessageQueueConsumer;
+import messaging.processor.queue.AbstractMessageConsumer;
 import messaging.processor.queue.MessageQueueConsumerException;
 
 import java.io.IOException;
@@ -16,7 +15,7 @@ import java.io.IOException;
 /**
  * Created by mzagar on 11.9.2014.
  */
-public class RabbitMQMessageQueueConsumer implements MessageQueueConsumer {
+public class RabbitMQMessageQueueConsumer extends AbstractMessageConsumer {
 
     protected Connection connection;
     protected Channel channel;
@@ -38,7 +37,7 @@ public class RabbitMQMessageQueueConsumer implements MessageQueueConsumer {
             channel = connection.createChannel();
             channel.queueDeclare(queueName, true, false, false, null);
             consumer = new QueueingConsumer(channel);
-            channel.basicConsume(queueName, false, consumer); // false=manual ack after message is processed
+            channel.basicConsume(queueName, true, consumer); // false=manual ack after message is processed
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -53,16 +52,11 @@ public class RabbitMQMessageQueueConsumer implements MessageQueueConsumer {
         }
     }
 
-    public void consume(MessageProcessor messageProcessor) throws MessageQueueConsumerException {
+    @Override
+    protected Message getMessageFromQueue() throws MessageQueueConsumerException {
         try {
-            QueueingConsumer.Delivery delivery = consumer.nextDelivery();
-
-            Message message = createMessageFrom(delivery);
-
-            messageProcessor.process(message);
-
-            channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
-        } catch(Exception e) {
+            return createMessageFrom(consumer.nextDelivery());
+        } catch (InterruptedException e) {
             throw new MessageQueueConsumerException(e.getMessage(), e);
         }
     }
