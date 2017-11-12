@@ -46,7 +46,15 @@ public class Main {
         final MessageProcessor messageProcessor = new MessageProcessorFactory().create(configuration.getMessageProcessorType());
 
         logger.info("Starting message consumer...");
-        consumer.start();
+
+        for (int i = 0; i < 10; i++) {
+            try {
+                consumer.start();
+            } catch (RuntimeException e) {
+                logger.error("Error while starting message consumer: " + e.getMessage(), e);
+                Thread.sleep(30000);
+            }
+        }
 
         logger.info("Waiting to process messages...");
         while (true) {

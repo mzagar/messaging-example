@@ -1,0 +1,18 @@
+FROM java:openjdk-8u111-jdk-alpine
+
+RUN apk add --no-cache curl
+
+ENV MVN_VERSION 3.5.2
+RUN wget http://ftp.fau.de/apache/maven/maven-3/${MVN_VERSION}/binaries/apache-maven-${MVN_VERSION}-bin.tar.gz
+RUN tar -zxvf apache-maven-${MVN_VERSION}-bin.tar.gz
+RUN rm apache-maven-${MVN_VERSION}-bin.tar.gz
+RUN mv apache-maven-${MVN_VERSION} /usr/lib/mvn
+
+ENV M2_HOME /usr/lib/mvn
+ENV M2 $M2_HOME/bin
+ENV PATH $PATH:$M2_HOME:$M2
+
+VOLUME /usr/local/src
+WORKDIR /usr/local/src
+
+CMD mvn tomcat7:run

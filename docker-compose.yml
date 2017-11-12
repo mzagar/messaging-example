@@ -1,0 +1,18 @@
+version: "3"
+services:
+  rabbitmq:
+    image: rabbitmq:3.6.14-alpine
+  message-gateway:
+    build: 
+      context: ./message-gateway
+      dockerfile: Dockerfile-staging
+    volumes:
+      - ./message-gateway:/usr/local/src
+    depends_on:
+      - "rabbitmq"
+  message-processor:
+    build:
+      context: ./message-processor
+      dockerfile: Dockerfile-staging
+    depends_on:
+      - "message-gateway"

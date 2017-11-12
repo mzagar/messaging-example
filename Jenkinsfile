@@ -30,6 +30,27 @@ node {
 node {
     stage ('Stage') {
         checkout scm
-        sh 'echo "Hello!"'
+
+        withEnv(['DOCKER_HOST=unix://var/run/docker.sock']) {
+            sh 'docker-compose build'
+            sh 'docker-compose up -d'
+
+            sleep(60000)
+
+            processorContainerid = sh(returnStdout: true, script: 'docker ps | grep message-processor | awk "{print $1}"').trim()
+
+            String curlCommand = 'curl http://rabbitmq:8080/message -g -X POST -d'
+            String firstPayload  = "'{\"messageId\":1, \"timestamp\":1234, \"protocolVersion\":\"1.0.0\", \"messageData\":{\"mMX\":1234, \"mPermGen\":1234}}'"
+            String secondPayload = "'{\"messageId\":2, \"timestamp\":2234, \"protocolVersion\":\"1.0.1\", \"messageData\":{\"mMX\":1234, \"mPermGen\":5678, \"mOldGen\":22222}}'"
+            String thirdPayload  = "'{\"messageId\":3, \"timestamp\":3234, \"protocolVersion\":\"2.0.0\", \"payload\":{\"mMX\":1234, \"mPermGen\":5678, \"mOldGen\":22222, \"mYoungGen\":333333}'"
+
+            sh "docker exec -it ${processorContainerid} ${curlCommand} ${firstPayload}"
+            sh "docker exec -it ${processorContainerid} ${curlCommand} ${secondPayload}"
+            sh "docker exec -it ${processorContainerid} ${curlCommand} ${thirdPayload}"
+
+            processorLogs = sh(returnStdout: true, script: 'docker logs ${processorContainerid}').trim()
+
+            sh "echo '${processorLogs}'"
+        }
     }
 }
