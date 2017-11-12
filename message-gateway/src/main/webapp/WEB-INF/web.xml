@@ -10,7 +10,7 @@
         <servlet-class>messaging.gateway.servlet.MessageGatewayServlet</servlet-class>
         <init-param>
             <param-name>queueHost</param-name>
-            <param-value>localhost</param-value>
+            <param-value>rabbitmq</param-value>
         </init-param>
         <init-param>
             <param-name>queueName</param-name>
